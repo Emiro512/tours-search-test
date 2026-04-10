@@ -53,7 +53,7 @@ function DestinationTypeBadge({ type }: { type: DestinationComboboxItem["type"] 
         : uiText.hotelBadge
 
   return (
-    <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
+    <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500 dark:bg-slate-800 dark:text-slate-400">
       {label}
     </span>
   )
@@ -64,7 +64,7 @@ function ClearButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       aria-label="Очистити поле"
-      className="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/10"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/10 dark:text-slate-500 dark:hover:bg-slate-800 dark:hover:text-slate-300 dark:focus-visible:ring-white/10"
       onClick={onClick}
     >
       <svg viewBox="0 0 20 20" className="h-4 w-4 fill-current" aria-hidden="true">
@@ -92,7 +92,7 @@ export function SearchForm({ isSubmitting = false, onSubmit }: SearchFormProps) 
       <div className="space-y-2 sm:flex-1">
         <label
           htmlFor="destination"
-          className="text-sm font-medium text-slate-700"
+          className="text-sm font-medium text-slate-700 dark:text-slate-300"
         >
           {uiText.destinationLabel}
         </label>

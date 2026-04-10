@@ -10,7 +10,7 @@ export function TourResultsSkeleton() {
       {[0, 1].map((item) => (
         <div
           key={item}
-          className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
         >
           <Skeleton className="h-44 rounded-none" />
           <div className="space-y-3 p-5">

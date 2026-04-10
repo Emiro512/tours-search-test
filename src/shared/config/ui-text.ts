@@ -15,4 +15,7 @@ export const uiText = {
   countryBadge: "Країна",
   cityBadge: "Місто",
   hotelBadge: "Готель",
+  themeToggleLabel: "Перемкнути тему",
+  lightTheme: "Світла",
+  darkTheme: "Темна",
 } as const

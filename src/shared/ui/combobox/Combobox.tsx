@@ -140,16 +140,16 @@ export function Combobox<TItem extends ComboboxItem>({
         </div>
       )}
     >
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900">
         <ul id={listboxId} role="listbox" className="max-h-80 overflow-y-auto p-2">
           {isLoading ? (
-            <li className="flex items-center gap-3 px-3 py-3 text-sm text-slate-500">
+            <li className="flex items-center gap-3 px-3 py-3 text-sm text-slate-500 dark:text-slate-400">
               <Spinner className="h-4 w-4" />
               {loadingText}
             </li>
           ) : null}
           {!isLoading && items.length === 0 ? (
-            <li className="px-3 py-3 text-sm text-slate-500">{emptyText}</li>
+            <li className="px-3 py-3 text-sm text-slate-500 dark:text-slate-400">{emptyText}</li>
           ) : null}
           {!isLoading
             ? items.map((item, index) => (
@@ -162,8 +162,8 @@ export function Combobox<TItem extends ComboboxItem>({
                   <button
                     type="button"
                     className={clsx(
-                      "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-slate-50",
-                      index === effectiveActiveIndex ? "bg-slate-100" : null,
+                      "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800",
+                      index === effectiveActiveIndex ? "bg-slate-100 dark:bg-slate-800" : null,
                     )}
                     onMouseEnter={() => setActiveIndex(index)}
                     onClick={() => selectItem(item)}
@@ -172,13 +172,13 @@ export function Combobox<TItem extends ComboboxItem>({
                       ? shouldWrapItemPrefix?.(item) === false
                         ? renderItemPrefix(item)
                         : (
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300">
                               {renderItemPrefix(item)}
                             </span>
                           )
                       : null}
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-slate-900">
+                      <span className="block truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                         {item.label}
                       </span>
                     </span>
