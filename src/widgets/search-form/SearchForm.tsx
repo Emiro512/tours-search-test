@@ -88,8 +88,8 @@ export function SearchForm({ isSubmitting = false, onSubmit }: SearchFormProps) 
   }
 
   return (
-    <form className="space-y-4" onSubmit={handleSubmit}>
-      <div className="space-y-2">
+    <form className="space-y-4 sm:flex sm:items-end sm:gap-4 sm:space-y-0" onSubmit={handleSubmit}>
+      <div className="space-y-2 sm:flex-1">
         <label
           htmlFor="destination"
           className="text-sm font-medium text-slate-700"
@@ -117,7 +117,7 @@ export function SearchForm({ isSubmitting = false, onSubmit }: SearchFormProps) 
           renderItemSuffix={(item) => <DestinationTypeBadge type={item.type} />}
         />
       </div>
-      <Button type="submit" className="w-full sm:w-auto" isLoading={isSubmitting}>
+      <Button type="submit" className="w-full sm:w-40" isLoading={isSubmitting}>
         {uiText.searchToursButton}
       </Button>
     </form>

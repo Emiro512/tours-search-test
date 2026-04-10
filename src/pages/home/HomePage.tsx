@@ -37,50 +37,52 @@ export function HomePage() {
           </p>
         </div>
         <div className="px-8 py-8">
-          <SearchForm
-            isSubmitting={Boolean(submittedCountryId && toursQuery.isPending)}
-            onSubmit={handleSearchSubmit}
-          />
-          {submittedCountryId ? (
-            <div className="mt-8">
-              {toursQuery.isPending ? (
-                <div
-                  className="mx-auto grid w-full max-w-[700px] grid-cols-1 gap-5 px-4 py-4 sm:grid-cols-2 sm:p-[25px]"
-                  aria-label={uiText.loadingTours}
-                >
-                  {[0, 1].map((item) => (
-                    <div
-                      key={item}
-                      className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
-                    >
-                      <Skeleton className="h-44 rounded-none" />
-                      <div className="space-y-3 p-5">
-                        <Skeleton className="h-5 w-3/4" />
-                        <Skeleton className="h-4 w-1/2" />
-                        <Skeleton className="h-4 w-2/3" />
-                        <div className="flex items-center justify-between gap-3 pt-1">
-                          <Skeleton className="h-6 w-24" />
-                          <Skeleton className="h-4 w-20" />
+          <div className="mx-auto w-full max-w-[700px]">
+            <SearchForm
+              isSubmitting={Boolean(submittedCountryId && toursQuery.isPending)}
+              onSubmit={handleSearchSubmit}
+            />
+            {submittedCountryId ? (
+              <div className="mt-8">
+                {toursQuery.isPending ? (
+                  <div
+                    className="grid w-full grid-cols-1 gap-5 px-4 py-4 sm:grid-cols-2 sm:p-[25px]"
+                    aria-label={uiText.loadingTours}
+                  >
+                    {[0, 1].map((item) => (
+                      <div
+                        key={item}
+                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+                      >
+                        <Skeleton className="h-44 rounded-none" />
+                        <div className="space-y-3 p-5">
+                          <Skeleton className="h-5 w-3/4" />
+                          <Skeleton className="h-4 w-1/2" />
+                          <Skeleton className="h-4 w-2/3" />
+                          <div className="flex items-center justify-between gap-3 pt-1">
+                            <Skeleton className="h-6 w-24" />
+                            <Skeleton className="h-4 w-20" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              ) : null}
+                    ))}
+                  </div>
+                ) : null}
 
-              {toursQuery.isError ? (
-                <p className="text-sm text-red-600">{errorMessage}</p>
-              ) : null}
+                {toursQuery.isError ? (
+                  <p className="text-sm text-red-600">{errorMessage}</p>
+                ) : null}
 
-              {toursQuery.isSuccess && toursQuery.data.length === 0 ? (
-                <p className="text-sm text-slate-600">{uiText.noToursFound}</p>
-              ) : null}
+                {toursQuery.isSuccess && toursQuery.data.length === 0 ? (
+                  <p className="text-sm text-slate-600">{uiText.noToursFound}</p>
+                ) : null}
 
-              {toursQuery.isSuccess && toursQuery.data.length > 0 ? (
-                <TourResults tours={toursQuery.data} />
-              ) : null}
-            </div>
-          ) : null}
+                {toursQuery.isSuccess && toursQuery.data.length > 0 ? (
+                  <TourResults tours={toursQuery.data} />
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </main>
