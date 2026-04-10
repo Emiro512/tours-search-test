@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { uiText } from "@/shared/config/ui-text"
 import {
@@ -13,7 +13,17 @@ export function useDestinationCombobox() {
     useState<DestinationComboboxItem | null>(null)
   const [open, setOpen] = useState(false)
   const [mode, setMode] = useState<"countries" | "geo">("countries")
-  const deferredValue = useDeferredValue(value)
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setDebouncedValue(value)
+    }, 300)
+
+    return () => {
+      window.clearTimeout(timeoutId)
+    }
+  }, [value])
 
   const countriesQuery = useQuery({
     queryKey: ["destination", "countries"],
@@ -22,9 +32,9 @@ export function useDestinationCombobox() {
   })
 
   const geoQuery = useQuery({
-    queryKey: ["destination", "geo", deferredValue],
-    queryFn: () => searchDestinationSuggestions(deferredValue.trim()),
-    enabled: mode === "geo" && deferredValue.trim().length > 0,
+    queryKey: ["destination", "geo", debouncedValue],
+    queryFn: () => searchDestinationSuggestions(debouncedValue.trim()),
+    enabled: mode === "geo" && debouncedValue.trim().length > 0,
   })
 
   const items = useMemo(() => {
@@ -36,7 +46,9 @@ export function useDestinationCombobox() {
   }, [countriesQuery.data, geoQuery.data, mode])
 
   const isLoading =
-    mode === "countries" ? countriesQuery.isLoading : geoQuery.isLoading
+    mode === "countries"
+      ? countriesQuery.isLoading || countriesQuery.isFetching
+      : geoQuery.isLoading || geoQuery.isFetching
   const emptyText =
     mode === "countries"
       ? uiText.noCountriesAvailable

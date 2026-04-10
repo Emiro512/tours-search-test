@@ -37,7 +37,10 @@ export function HomePage() {
           </p>
         </div>
         <div className="px-8 py-8">
-          <SearchForm onSubmit={handleSearchSubmit} />
+          <SearchForm
+            isSubmitting={Boolean(submittedCountryId && toursQuery.isPending)}
+            onSubmit={handleSearchSubmit}
+          />
           {submittedCountryId ? (
             <div className="mt-8">
               {toursQuery.isPending ? (

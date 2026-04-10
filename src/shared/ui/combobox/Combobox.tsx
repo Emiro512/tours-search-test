@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { useId, useState } from "react"
+import { useId, useRef, useState } from "react"
 import clsx from "clsx"
 import { Input } from "@/shared/ui/input/Input"
 import { Popover } from "@/shared/ui/popover/Popover"
@@ -48,6 +48,7 @@ export function Combobox<TItem extends ComboboxItem>({
   renderItemSuffix,
 }: ComboboxProps<TItem>) {
   const listboxId = useId()
+  const inputRef = useRef<HTMLInputElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const effectiveActiveIndex =
     open && !isLoading && items.length > 0
@@ -64,6 +65,9 @@ export function Combobox<TItem extends ComboboxItem>({
   function selectItem(item: TItem) {
     onSelectItem(item)
     setActiveIndex(null)
+    queueMicrotask(() => {
+      inputRef.current?.focus()
+    })
   }
 
   return (
@@ -73,6 +77,7 @@ export function Combobox<TItem extends ComboboxItem>({
       renderReference={({ setReference }) => (
         <div ref={setReference}>
           <Input
+            ref={inputRef}
             id={inputId}
             value={value}
             placeholder={placeholder}

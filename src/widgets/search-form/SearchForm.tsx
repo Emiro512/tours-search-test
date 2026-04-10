@@ -75,10 +75,11 @@ function ClearButton({ onClick }: { onClick: () => void }) {
 }
 
 export type SearchFormProps = {
+  isSubmitting?: boolean
   onSubmit?: (selection: DestinationComboboxItem | null) => void
 }
 
-export function SearchForm({ onSubmit }: SearchFormProps) {
+export function SearchForm({ isSubmitting = false, onSubmit }: SearchFormProps) {
   const destination = useDestinationCombobox()
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -116,7 +117,7 @@ export function SearchForm({ onSubmit }: SearchFormProps) {
           renderItemSuffix={(item) => <DestinationTypeBadge type={item.type} />}
         />
       </div>
-      <Button type="submit" className="w-full sm:w-auto">
+      <Button type="submit" className="w-full sm:w-auto" isLoading={isSubmitting}>
         {uiText.searchToursButton}
       </Button>
     </form>
