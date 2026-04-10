@@ -36,23 +36,25 @@ export function HomePage() {
         </div>
         <div className="px-8 py-8">
           <SearchForm onSubmit={handleSearchSubmit} />
-          <div className="mt-8">
-            {toursQuery.isPending ? (
-              <p className="text-sm text-slate-600">Loading tours...</p>
-            ) : null}
+          {submittedCountryId ? (
+            <div className="mt-8">
+              {toursQuery.isPending ? (
+                <p className="text-sm text-slate-600">Loading tours...</p>
+              ) : null}
 
-            {toursQuery.isError ? (
-              <p className="text-sm text-red-600">{errorMessage}</p>
-            ) : null}
+              {toursQuery.isError ? (
+                <p className="text-sm text-red-600">{errorMessage}</p>
+              ) : null}
 
-            {toursQuery.isSuccess && toursQuery.data.length === 0 ? (
-              <p className="text-sm text-slate-600">No tours found</p>
-            ) : null}
+              {toursQuery.isSuccess && toursQuery.data.length === 0 ? (
+                <p className="text-sm text-slate-600">No tours found</p>
+              ) : null}
 
-            {toursQuery.isSuccess && toursQuery.data.length > 0 ? (
-              <TourResults tours={toursQuery.data} />
-            ) : null}
-          </div>
+              {toursQuery.isSuccess && toursQuery.data.length > 0 ? (
+                <TourResults tours={toursQuery.data} />
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </main>

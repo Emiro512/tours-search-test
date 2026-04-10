@@ -9,37 +9,34 @@ type ProvidedApiModule = {
   getPrice: (priceId: string) => Promise<Response>
 }
 
-async function loadProvidedApi(): Promise<ProvidedApiModule> {
-  const importProvidedApi = new Function(
-    'return import("@/services/api/external/api.js")',
-  ) as () => Promise<ProvidedApiModule>
+// @ts-ignore The provided mock API is a plain JavaScript module without declarations.
+import * as externalApi from "@/services/api/external/api.js"
 
-  return importProvidedApi()
-}
+const providedApiModule = externalApi as ProvidedApiModule
 
 export const providedApi = {
   async getCountries() {
-    return (await loadProvidedApi()).getCountries()
+    return providedApiModule.getCountries()
   },
   async searchGeo(query?: string) {
-    return (await loadProvidedApi()).searchGeo(query)
+    return providedApiModule.searchGeo(query)
   },
   async startSearchPrices(countryId: string) {
-    return (await loadProvidedApi()).startSearchPrices(countryId)
+    return providedApiModule.startSearchPrices(countryId)
   },
   async getSearchPrices(token: string) {
-    return (await loadProvidedApi()).getSearchPrices(token)
+    return providedApiModule.getSearchPrices(token)
   },
   async stopSearchPrices(token: string) {
-    return (await loadProvidedApi()).stopSearchPrices(token)
+    return providedApiModule.stopSearchPrices(token)
   },
   async getHotels(countryId: string) {
-    return (await loadProvidedApi()).getHotels(countryId)
+    return providedApiModule.getHotels(countryId)
   },
   async getHotel(hotelId: number | string) {
-    return (await loadProvidedApi()).getHotel(hotelId)
+    return providedApiModule.getHotel(hotelId)
   },
   async getPrice(priceId: string) {
-    return (await loadProvidedApi()).getPrice(priceId)
+    return providedApiModule.getPrice(priceId)
   },
 }
