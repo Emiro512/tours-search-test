@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"
 import { Link, useParams } from "react-router-dom"
 import { formatDate } from "@/shared/lib/format/formatDate"
 import { formatPrice } from "@/shared/lib/format/formatPrice"
@@ -51,7 +52,12 @@ export function TourDetailsPage() {
 
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-4 py-10">
-      <div className="overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_80px_-50px_rgba(15,23,42,0.45)]">
+      <motion.div
+        className="overflow-hidden rounded-[2rem] bg-white shadow-[0_30px_80px_-50px_rgba(15,23,42,0.45)]"
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+      >
         <div className="relative h-72 bg-slate-200 sm:h-96">
           {details.hotelImage ? (
             <img
@@ -69,7 +75,12 @@ export function TourDetailsPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-slate-950/10 to-transparent" />
         </div>
         <div className="space-y-6 p-6 sm:p-8">
-          <header className="space-y-2">
+          <motion.header
+            className="space-y-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut", delay: 0.04 }}
+          >
             <Link to="/" className="inline-block text-sm font-medium text-slate-900 underline underline-offset-4">
               Повернутися до пошуку
             </Link>
@@ -79,9 +90,14 @@ export function TourDetailsPage() {
             <p className="text-sm text-slate-500">
               {details.countryName} · {details.cityName}
             </p>
-          </header>
+          </motion.header>
 
-          <section className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:grid-cols-2">
+          <motion.section
+            className="grid gap-4 rounded-3xl border border-slate-200 bg-slate-50 p-5 sm:grid-cols-2"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut", delay: 0.08 }}
+          >
             <div>
               <p className="text-sm text-slate-500">Ціна</p>
               <p className="mt-1 text-2xl font-semibold text-slate-900">
@@ -94,19 +110,29 @@ export function TourDetailsPage() {
                 {formatDate(details.startDate)} - {formatDate(details.endDate)}
               </p>
             </div>
-          </section>
+          </motion.section>
 
           {details.description ? (
-            <section className="space-y-2">
+            <motion.section
+              className="space-y-2"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.18, ease: "easeOut", delay: 0.12 }}
+            >
               <h2 className="text-lg font-semibold text-slate-900">Опис</h2>
               <p className="text-sm leading-6 text-slate-600">
                 {details.description}
               </p>
-            </section>
+            </motion.section>
           ) : null}
 
           {details.services && Object.keys(details.services).length > 0 ? (
-            <section className="space-y-3">
+            <motion.section
+              className="space-y-3"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.18, ease: "easeOut", delay: 0.16 }}
+            >
               <h2 className="text-lg font-semibold text-slate-900">Послуги</h2>
               <ul className="grid gap-3 sm:grid-cols-2">
                 {Object.entries(details.services).map(([service, value]) => (
@@ -121,10 +147,10 @@ export function TourDetailsPage() {
                   </li>
                 ))}
               </ul>
-            </section>
+            </motion.section>
           ) : null}
         </div>
-      </div>
+      </motion.div>
     </main>
   )
 }

@@ -9,6 +9,7 @@ import {
   useFloating,
   useInteractions,
 } from "@floating-ui/react"
+import { motion } from "framer-motion"
 import type { ReactNode } from "react"
 
 type PopoverRenderProps = {
@@ -65,7 +66,13 @@ export function Popover({
             style={floatingStyles}
             {...getFloatingProps()}
           >
-            {children}
+            <motion.div
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+            >
+              {children}
+            </motion.div>
           </div>
         </FloatingPortal>
       ) : null}

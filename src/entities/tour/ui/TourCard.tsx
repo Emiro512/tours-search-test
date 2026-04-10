@@ -1,3 +1,4 @@
+import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { formatDate } from "@/shared/lib/format/formatDate"
 import { formatPrice } from "@/shared/lib/format/formatPrice"
@@ -10,7 +11,13 @@ type TourCardProps = {
 
 export function TourCard({ tour }: TourCardProps) {
   return (
-    <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <motion.article
+      className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -3 }}
+      transition={{ duration: 0.18, ease: "easeOut" }}
+    >
       <img
         src={tour.hotelImage}
         alt={tour.hotelName}
@@ -40,6 +47,6 @@ export function TourCard({ tour }: TourCardProps) {
           </Link>
         </div>
       </div>
-    </article>
+    </motion.article>
   )
 }
