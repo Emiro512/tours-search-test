@@ -1,4 +1,5 @@
 import type { FormEvent } from "react"
+import { uiText } from "@/shared/config/ui-text"
 import { Button } from "@/shared/ui/button/Button"
 import { Combobox } from "@/shared/ui/combobox/Combobox"
 import type { DestinationComboboxItem } from "@/widgets/search-form/model"
@@ -28,10 +29,32 @@ function DestinationTypeIcon({ type }: { type: DestinationComboboxItem["type"] }
   )
 }
 
+function DestinationItemPrefix({ item }: { item: DestinationComboboxItem }) {
+  if (item.type === "country" && item.flag) {
+    return (
+      <img
+        src={item.flag}
+        alt=""
+        className="h-5 w-7 shrink-0 rounded-sm object-cover"
+        loading="lazy"
+      />
+    )
+  }
+
+  return <DestinationTypeIcon type={item.type} />
+}
+
 function DestinationTypeBadge({ type }: { type: DestinationComboboxItem["type"] }) {
+  const label =
+    type === "country"
+      ? uiText.countryBadge
+      : type === "city"
+        ? uiText.cityBadge
+        : uiText.hotelBadge
+
   return (
     <span className="rounded-full bg-slate-100 px-2 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-500">
-      {type}
+      {label}
     </span>
   )
 }
@@ -55,26 +78,28 @@ export function SearchForm({ onSubmit }: SearchFormProps) {
           htmlFor="destination"
           className="text-sm font-medium text-slate-700"
         >
-          Destination
+          {uiText.destinationLabel}
         </label>
         <Combobox
           inputId="destination"
           items={destination.items}
           value={destination.value}
           open={destination.open}
-          placeholder="Choose a country, city, or hotel"
+          placeholder={uiText.destinationPlaceholder}
           emptyText={destination.emptyText}
           isLoading={destination.isLoading}
+          loadingText={uiText.loading}
           onOpenChange={destination.setOpen}
           onInputClick={destination.onInputClick}
           onInputChange={destination.onInputChange}
           onSelectItem={destination.onSelectItem}
-          renderItemPrefix={(item) => <DestinationTypeIcon type={item.type} />}
+          renderItemPrefix={(item) => <DestinationItemPrefix item={item} />}
+          shouldWrapItemPrefix={(item) => !(item.type === "country" && item.flag)}
           renderItemSuffix={(item) => <DestinationTypeBadge type={item.type} />}
         />
       </div>
       <Button type="submit" className="w-full sm:w-auto">
-        Search Tours
+        {uiText.searchToursButton}
       </Button>
     </form>
   )

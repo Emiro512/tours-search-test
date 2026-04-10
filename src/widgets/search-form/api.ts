@@ -20,6 +20,7 @@ export async function getDestinationCountries(): Promise<
     label: country.name,
     type: "country",
     countryId: country.id,
+    flag: country.flag,
   }))
 }
 
@@ -34,5 +35,6 @@ export async function searchDestinationSuggestions(
     label: item.name,
     type: item.type,
     countryId: "countryId" in item ? item.countryId : String(item.id),
+    flag: "flag" in item ? item.flag : undefined,
   }))
 }

@@ -3,4 +3,5 @@ export type DestinationComboboxItem = {
   label: string
   type: "country" | "city" | "hotel"
   countryId?: string
+  flag?: string
 }

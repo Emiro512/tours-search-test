@@ -23,6 +23,7 @@ type ComboboxProps<TItem extends ComboboxItem> = {
   onOpenChange: (open: boolean) => void
   onSelectItem: (item: TItem) => void
   renderItemPrefix?: (item: TItem) => ReactNode
+  shouldWrapItemPrefix?: (item: TItem) => boolean
   renderItemSuffix?: (item: TItem) => ReactNode
 }
 
@@ -40,6 +41,7 @@ export function Combobox<TItem extends ComboboxItem>({
   onOpenChange,
   onSelectItem,
   renderItemPrefix,
+  shouldWrapItemPrefix,
   renderItemSuffix,
 }: ComboboxProps<TItem>) {
   const listboxId = useId()
@@ -83,11 +85,15 @@ export function Combobox<TItem extends ComboboxItem>({
                     )}
                     onClick={() => onSelectItem(item)}
                   >
-                    {renderItemPrefix ? (
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">
-                        {renderItemPrefix(item)}
-                      </span>
-                    ) : null}
+                    {renderItemPrefix
+                      ? shouldWrapItemPrefix?.(item) === false
+                        ? renderItemPrefix(item)
+                        : (
+                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-600">
+                              {renderItemPrefix(item)}
+                            </span>
+                          )
+                      : null}
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-sm font-medium text-slate-900">
                         {item.label}

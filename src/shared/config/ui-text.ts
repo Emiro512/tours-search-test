@@ -1,0 +1,18 @@
+export const uiText = {
+  destinationLabel: "Напрямок",
+  destinationPlaceholder: "Оберіть країну, місто або готель",
+  searchToursButton: "Шукати тури",
+  noDestinationsFound: "Нічого не знайдено",
+  noCountriesAvailable: "Країни недоступні",
+  loading: "Завантаження...",
+  toursTitle: "Пошук турів",
+  toursHeading: "Знайдіть тур за напрямком",
+  toursDescription: "Оберіть країну, місто або готель, щоб переглянути доступні тури.",
+  loadingTours: "Завантажуємо тури...",
+  loadingToursError: "Не вдалося завантажити тури.",
+  noToursFound: "Турів не знайдено",
+  openPrice: "Відкрити ціну",
+  countryBadge: "Країна",
+  cityBadge: "Місто",
+  hotelBadge: "Готель",
+} as const

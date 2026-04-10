@@ -1,5 +1,6 @@
 import { formatDate } from "@/shared/lib/format/formatDate"
 import { formatPrice } from "@/shared/lib/format/formatPrice"
+import { uiText } from "@/shared/config/ui-text"
 import type { TourListItem } from "@/services/tours/tours.types"
 
 type TourCardProps = {
@@ -34,7 +35,7 @@ export function TourCard({ tour }: TourCardProps) {
             href="#"
             className="text-sm font-medium text-slate-900 underline underline-offset-4"
           >
-            Відкрити ціну
+            {uiText.openPrice}
           </a>
         </div>
       </div>
