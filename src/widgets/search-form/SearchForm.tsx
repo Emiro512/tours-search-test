@@ -63,7 +63,7 @@ export function SearchForm({ onSubmit }: SearchFormProps) {
           value={destination.value}
           open={destination.open}
           placeholder="Choose a country, city, or hotel"
-          emptyText="No destinations found"
+          emptyText={destination.emptyText}
           isLoading={destination.isLoading}
           onOpenChange={destination.setOpen}
           onInputClick={destination.onInputClick}

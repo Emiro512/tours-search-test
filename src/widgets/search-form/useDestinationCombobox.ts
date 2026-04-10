@@ -36,6 +36,10 @@ export function useDestinationCombobox() {
 
   const isLoading =
     mode === "countries" ? countriesQuery.isLoading : geoQuery.isLoading
+  const emptyText =
+    mode === "countries"
+      ? "No countries available"
+      : "No destinations found"
 
   function handleInputClick() {
     setOpen(true)
@@ -66,6 +70,7 @@ export function useDestinationCombobox() {
     items,
     open,
     isLoading,
+    emptyText,
     selectedItem,
     setOpen,
     onInputClick: handleInputClick,
