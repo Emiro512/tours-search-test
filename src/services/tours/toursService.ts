@@ -1,7 +1,7 @@
 import { getHotels } from "@/services/api/hotelsApi"
 import type { ApiHotelsMapDto } from "@/services/api/api.types"
 import { runSearch } from "@/services/search/searchService"
-import { aggregateTours, type TourListItem } from "@/services/tours/toursAggregator"
+import { aggregateTours } from "@/services/tours/toursAggregator"
 
 const hotelsByCountryCache = new Map<string, ApiHotelsMapDto>()
 
@@ -19,7 +19,7 @@ async function getHotelsByCountry(countryId: string): Promise<ApiHotelsMapDto> {
   return hotels
 }
 
-export async function getToursByCountry(countryId: string): Promise<TourListItem[]> {
+export async function getToursByCountry(countryId: string) {
   const [searchResult, hotels] = await Promise.all([
     runSearch(countryId),
     getHotelsByCountry(countryId),
