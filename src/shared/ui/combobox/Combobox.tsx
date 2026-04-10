@@ -3,6 +3,7 @@ import { useId, useState } from "react"
 import clsx from "clsx"
 import { Input } from "@/shared/ui/input/Input"
 import { Popover } from "@/shared/ui/popover/Popover"
+import { Spinner } from "@/shared/ui/spinner/Spinner"
 
 type ComboboxItem = {
   id: string
@@ -137,7 +138,10 @@ export function Combobox<TItem extends ComboboxItem>({
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
         <ul id={listboxId} role="listbox" className="max-h-80 overflow-y-auto p-2">
           {isLoading ? (
-            <li className="px-3 py-3 text-sm text-slate-500">{loadingText}</li>
+            <li className="flex items-center gap-3 px-3 py-3 text-sm text-slate-500">
+              <Spinner className="h-4 w-4" />
+              {loadingText}
+            </li>
           ) : null}
           {!isLoading && items.length === 0 ? (
             <li className="px-3 py-3 text-sm text-slate-500">{emptyText}</li>
