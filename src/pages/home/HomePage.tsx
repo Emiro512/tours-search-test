@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { uiText } from "@/shared/config/ui-text"
-import { Skeleton } from "@/shared/ui/skeleton/Skeleton"
 import { TourResults } from "@/widgets/tour-results/TourResults"
+import { TourResultsSkeleton } from "@/widgets/tour-results/TourResultsSkeleton"
 import { SearchForm } from "@/widgets/search-form/SearchForm"
 import type { DestinationComboboxItem } from "@/widgets/search-form/model"
 import { useToursSearch } from "@/widgets/search-form/useToursSearch"
@@ -45,28 +45,7 @@ export function HomePage() {
             {submittedCountryId ? (
               <div className="mt-8">
                 {toursQuery.isPending ? (
-                  <div
-                    className="grid w-full grid-cols-1 gap-5 px-4 py-4 sm:grid-cols-2 sm:p-[25px]"
-                    aria-label={uiText.loadingTours}
-                  >
-                    {[0, 1].map((item) => (
-                      <div
-                        key={item}
-                        className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
-                      >
-                        <Skeleton className="h-44 rounded-none" />
-                        <div className="space-y-3 p-5">
-                          <Skeleton className="h-5 w-3/4" />
-                          <Skeleton className="h-4 w-1/2" />
-                          <Skeleton className="h-4 w-2/3" />
-                          <div className="flex items-center justify-between gap-3 pt-1">
-                            <Skeleton className="h-6 w-24" />
-                            <Skeleton className="h-4 w-20" />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <TourResultsSkeleton />
                 ) : null}
 
                 {toursQuery.isError ? (
