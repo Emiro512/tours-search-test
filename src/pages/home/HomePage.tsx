@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { TourResults } from "@/widgets/tour-results/TourResults"
 import { SearchForm } from "@/widgets/search-form/SearchForm"
 import type { DestinationComboboxItem } from "@/widgets/search-form/model"
 import { useToursSearch } from "@/widgets/search-form/useToursSearch"
@@ -49,27 +50,7 @@ export function HomePage() {
             ) : null}
 
             {toursQuery.isSuccess && toursQuery.data.length > 0 ? (
-              <ul className="space-y-3">
-                {toursQuery.data.map((tour) => (
-                  <li
-                    key={tour.priceId}
-                    className="rounded-2xl border border-slate-200 px-4 py-4"
-                  >
-                    <p className="text-base font-semibold text-slate-900">
-                      {tour.hotelName}
-                    </p>
-                    <p className="mt-1 text-sm text-slate-600">
-                      {tour.countryName} · {tour.cityName}
-                    </p>
-                    <p className="mt-2 text-sm text-slate-700">
-                      {tour.amount} {tour.currency}
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                      {tour.startDate} - {tour.endDate}
-                    </p>
-                  </li>
-                ))}
-              </ul>
+              <TourResults tours={toursQuery.data} />
             ) : null}
           </div>
         </div>
