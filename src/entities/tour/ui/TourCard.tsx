@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import { formatDate } from "@/shared/lib/format/formatDate"
 import { formatPrice } from "@/shared/lib/format/formatPrice"
 import { uiText } from "@/shared/config/ui-text"
@@ -31,12 +32,12 @@ export function TourCard({ tour }: TourCardProps) {
           <p className="text-xl font-semibold text-slate-900">
             {formatPrice(tour.amount, tour.currency)}
           </p>
-          <a
-            href="#"
+          <Link
+            to={`/tour/${tour.hotelId}/${tour.priceId}`}
             className="text-sm font-medium text-slate-900 underline underline-offset-4"
           >
             {uiText.openPrice}
-          </a>
+          </Link>
         </div>
       </div>
     </article>
