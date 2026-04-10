@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { useId } from "react"
+import { useId, useState } from "react"
 import clsx from "clsx"
 import { Input } from "@/shared/ui/input/Input"
 import { Popover } from "@/shared/ui/popover/Popover"
@@ -22,6 +22,7 @@ type ComboboxProps<TItem extends ComboboxItem> = {
   onInputClick: () => void
   onOpenChange: (open: boolean) => void
   onSelectItem: (item: TItem) => void
+  inputEndAdornment?: ReactNode
   renderItemPrefix?: (item: TItem) => ReactNode
   shouldWrapItemPrefix?: (item: TItem) => boolean
   renderItemSuffix?: (item: TItem) => ReactNode
@@ -40,11 +41,29 @@ export function Combobox<TItem extends ComboboxItem>({
   onInputClick,
   onOpenChange,
   onSelectItem,
+  inputEndAdornment,
   renderItemPrefix,
   shouldWrapItemPrefix,
   renderItemSuffix,
 }: ComboboxProps<TItem>) {
   const listboxId = useId()
+  const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const effectiveActiveIndex =
+    open && !isLoading && items.length > 0
+      ? activeIndex !== null && activeIndex < items.length
+        ? activeIndex
+        : 0
+      : null
+
+  function closeDropdown() {
+    setActiveIndex(null)
+    onOpenChange(false)
+  }
+
+  function selectItem(item: TItem) {
+    onSelectItem(item)
+    setActiveIndex(null)
+  }
 
   return (
     <Popover
@@ -56,13 +75,61 @@ export function Combobox<TItem extends ComboboxItem>({
             id={inputId}
             value={value}
             placeholder={placeholder}
+            endAdornment={inputEndAdornment}
             role="combobox"
             aria-expanded={open}
             aria-controls={listboxId}
+            aria-activedescendant={
+              effectiveActiveIndex !== null
+                ? `${listboxId}-${items[effectiveActiveIndex]?.id}`
+                : undefined
+            }
             aria-autocomplete="list"
             autoComplete="off"
             onClick={onInputClick}
             onChange={(event) => onInputChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Escape" && open) {
+                event.preventDefault()
+                closeDropdown()
+                return
+              }
+
+              if (event.key === "Tab" && open) {
+                setActiveIndex(null)
+                onOpenChange(false)
+                return
+              }
+
+              if (!open || isLoading || items.length === 0) {
+                return
+              }
+
+              if (event.key === "ArrowDown") {
+                event.preventDefault()
+                setActiveIndex(
+                  effectiveActiveIndex === null
+                    ? 0
+                    : (effectiveActiveIndex + 1) % items.length,
+                )
+                return
+              }
+
+              if (event.key === "ArrowUp") {
+                event.preventDefault()
+                setActiveIndex(
+                  effectiveActiveIndex === null
+                    ? items.length - 1
+                    : (effectiveActiveIndex - 1 + items.length) % items.length,
+                )
+                return
+              }
+
+              if (event.key === "Enter" && effectiveActiveIndex !== null) {
+                event.preventDefault()
+                selectItem(items[effectiveActiveIndex])
+              }
+            }}
           />
         </div>
       )}
@@ -76,14 +143,21 @@ export function Combobox<TItem extends ComboboxItem>({
             <li className="px-3 py-3 text-sm text-slate-500">{emptyText}</li>
           ) : null}
           {!isLoading
-            ? items.map((item) => (
-                <li key={item.id}>
+            ? items.map((item, index) => (
+                <li
+                  key={item.id}
+                  id={`${listboxId}-${item.id}`}
+                  role="option"
+                  aria-selected={index === effectiveActiveIndex}
+                >
                   <button
                     type="button"
                     className={clsx(
                       "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition hover:bg-slate-50",
+                      index === effectiveActiveIndex ? "bg-slate-100" : null,
                     )}
-                    onClick={() => onSelectItem(item)}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={() => selectItem(item)}
                   >
                     {renderItemPrefix
                       ? shouldWrapItemPrefix?.(item) === false

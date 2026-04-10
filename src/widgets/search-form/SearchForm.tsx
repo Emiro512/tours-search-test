@@ -59,6 +59,21 @@ function DestinationTypeBadge({ type }: { type: DestinationComboboxItem["type"] 
   )
 }
 
+function ClearButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      aria-label="Очистити поле"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-full text-slate-400 transition hover:bg-slate-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900/10"
+      onClick={onClick}
+    >
+      <svg viewBox="0 0 20 20" className="h-4 w-4 fill-current" aria-hidden="true">
+        <path d="M5.76 4.34 10 8.59l4.24-4.25 1.42 1.42L11.41 10l4.25 4.24-1.42 1.42L10 11.41l-4.24 4.25-1.42-1.42L8.59 10 4.34 5.76l1.42-1.42Z" />
+      </svg>
+    </button>
+  )
+}
+
 export type SearchFormProps = {
   onSubmit?: (selection: DestinationComboboxItem | null) => void
 }
@@ -89,6 +104,9 @@ export function SearchForm({ onSubmit }: SearchFormProps) {
           emptyText={destination.emptyText}
           isLoading={destination.isLoading}
           loadingText={uiText.loading}
+          inputEndAdornment={
+            destination.value ? <ClearButton onClick={destination.onClear} /> : null
+          }
           onOpenChange={destination.setOpen}
           onInputClick={destination.onInputClick}
           onInputChange={destination.onInputChange}

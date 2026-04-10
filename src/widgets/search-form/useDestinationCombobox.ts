@@ -66,6 +66,13 @@ export function useDestinationCombobox() {
     setOpen(false)
   }
 
+  function handleClear() {
+    setValue("")
+    setSelectedItem(null)
+    setMode("countries")
+    setOpen(true)
+  }
+
   return {
     value,
     items,
@@ -77,5 +84,6 @@ export function useDestinationCombobox() {
     onInputClick: handleInputClick,
     onInputChange: handleInputChange,
     onSelectItem: handleSelectItem,
+    onClear: handleClear,
   }
 }
