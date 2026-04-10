@@ -9,7 +9,7 @@ type ProvidedApiModule = {
   getPrice: (priceId: string) => Promise<Response>
 }
 
-// @ts-ignore The provided mock API is a plain JavaScript module without declarations.
+// @ts-expect-error The provided mock API is a plain JavaScript module without declarations.
 import * as externalApi from "@/services/api/external/api.js"
 
 const providedApiModule = externalApi as ProvidedApiModule

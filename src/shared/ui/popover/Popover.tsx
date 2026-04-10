@@ -28,7 +28,11 @@ export function Popover({
   renderReference,
   children,
 }: PopoverProps) {
-  const { refs, floatingStyles, context } = useFloating({
+  const {
+    refs: { setReference, setFloating },
+    floatingStyles,
+    context,
+  } = useFloating({
     open,
     onOpenChange,
     placement: "bottom-start",
@@ -53,11 +57,11 @@ export function Popover({
 
   return (
     <>
-      {renderReference({ setReference: refs.setReference })}
+      {renderReference({ setReference })}
       {open ? (
         <FloatingPortal>
           <div
-            ref={refs.setFloating}
+            ref={setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
           >

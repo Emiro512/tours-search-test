@@ -1,5 +1,6 @@
 import { useDeferredValue, useMemo, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
+import { uiText } from "@/shared/config/ui-text"
 import {
   getDestinationCountries,
   searchDestinationSuggestions,
@@ -38,8 +39,8 @@ export function useDestinationCombobox() {
     mode === "countries" ? countriesQuery.isLoading : geoQuery.isLoading
   const emptyText =
     mode === "countries"
-      ? "No countries available"
-      : "No destinations found"
+      ? uiText.noCountriesAvailable
+      : uiText.noDestinationsFound
 
   function handleInputClick() {
     setOpen(true)
