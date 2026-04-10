@@ -1,73 +1,147 @@
-# React + TypeScript + Vite
+# Tours Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+This project is a tours search application that allows users to:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* search destinations using an autocomplete combobox (countries, cities, hotels)
+* view available tour offers
+* open a dedicated page with full tour details
 
-## React Compiler
+The application is built with a focus on clean architecture, separation of concerns, and scalable frontend patterns.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Install dependencies
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Run development server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+### Build project
+
+```bash
+npm run build
+```
+
+---
+
+## Tech Stack
+
+* **React**
+* **TypeScript**
+* **Vite**
+* **TanStack Query**
+* **Tailwind CSS**
+
+---
+
+## Architecture
+
+The project follows a layered and modular structure:
+
+### Services layer
+
+* contains business logic and orchestration
+* handles polling, retries, and aggregation
+* isolates API behavior from UI
+
+### API layer
+
+* thin adapters over the provided external API
+* normalizes responses into predictable DTOs
+
+### Hooks
+
+* thin wrappers around services
+* responsible only for connecting services to React via TanStack Query
+
+### Widgets
+
+* feature-level UI composition
+* examples:
+
+  * search form
+  * results list
+
+### Entities
+
+* domain-level UI components (e.g. tour card)
+
+### Shared
+
+* reusable UI primitives (button, input, popover, combobox)
+* utility functions (formatting, constants)
+
+---
+
+## Key Features
+
+### Destination Autocomplete
+
+* supports countries, cities, and hotels
+* dynamic suggestions based on user input
+* reusable combobox component
+
+### Tours Search
+
+* search flow triggered by selected destination
+* loading, error, and empty states handled explicitly
+
+### Polling Strategy
+
+* search results are loaded via polling
+* implemented in the service layer (not in React)
+* keeps UI components simple and predictable
+
+### Tour Details Page
+
+* dedicated route for each tour
+* loads hotel and price data
+* displays:
+
+  * image
+  * location
+  * price and dates
+  * description
+  * services
+
+---
+
+## Key Decisions
+
+* **Business logic is placed in services**, not in React components
+* **Polling and retries are handled outside of hooks**, improving readability
+* **TanStack Query is used for server state**, avoiding unnecessary global state complexity
+* **Combobox is implemented as a reusable component**, not tied to tours logic
+* **API layer isolates external data structures**, preventing leakage into UI
+
+---
+
+## Possible Improvements
+
+If this were a production project, the next steps would be:
+
+* add full **i18n support**
+* implement **dark/light theme**
+* introduce **Redux Toolkit** for global preferences (theme, locale)
+* improve **test coverage**
+* enhance UI with skeleton loaders and animations
+
+---
+
+## Notes
+
+* The external API file is treated as immutable and is not modified.
+* The implementation focuses on clarity, maintainability, and incremental development.
+* The project structure is intentionally kept simple and scalable.
+
+---
