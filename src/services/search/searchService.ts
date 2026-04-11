@@ -1,15 +1,28 @@
 import {
   getSearchPrices,
   startSearchPrices,
+  stopSearchPrices,
 } from "@/services/api/toursApi"
 import type { ApiErrorDto, ApiPriceOfferDto } from "@/services/api/api.types"
 import {
+  SearchCancelledError,
   SearchServiceError,
   type SearchPrice,
   type SearchResult,
 } from "@/services/search/search.types"
 
 const MAX_FAILURE_RETRIES = 2
+
+type SearchSession = {
+  id: number
+  cancelled: boolean
+  token?: string
+  timerId?: ReturnType<typeof setTimeout>
+  resolveWait?: () => void
+}
+
+let activeSession: SearchSession | null = null
+let nextSessionId = 0
 
 function isApiError(error: unknown): error is ApiErrorDto {
   return (
@@ -43,11 +56,26 @@ function getDelay(waitUntil: string): number {
   return Math.max(timestamp - now, 0)
 }
 
-function waitFor(waitUntil: string): Promise<void> {
+function isCurrentSession(session: SearchSession) {
+  return activeSession === session && !session.cancelled
+}
+
+function ensureCurrentSession(session: SearchSession) {
+  if (!isCurrentSession(session)) {
+    throw new SearchCancelledError()
+  }
+}
+
+function waitFor(waitUntil: string, session: SearchSession): Promise<void> {
   const delay = getDelay(waitUntil)
 
   return new Promise((resolve) => {
-    setTimeout(resolve, delay)
+    session.resolveWait = resolve
+    session.timerId = setTimeout(() => {
+      session.timerId = undefined
+      session.resolveWait = undefined
+      resolve()
+    }, delay)
   })
 }
 
@@ -95,17 +123,64 @@ async function startSearch(countryId: string) {
   throw new SearchServiceError("Search request failed.")
 }
 
-async function loadSearchPrices(token: string): Promise<SearchPrice[]> {
+async function cancelSession(session: SearchSession | null) {
+  if (!session || session.cancelled) {
+    return
+  }
+
+  session.cancelled = true
+
+  if (session.timerId) {
+    clearTimeout(session.timerId)
+    session.timerId = undefined
+  }
+
+  session.resolveWait?.()
+  session.resolveWait = undefined
+
+  if (session.token) {
+    try {
+      await stopSearchPrices(session.token)
+    } catch {
+      // A failed cancellation should not block the replacement search.
+    }
+  }
+}
+
+async function createSearchSession(): Promise<SearchSession> {
+  await cancelSession(activeSession)
+
+  const session = {
+    id: nextSessionId,
+    cancelled: false,
+  }
+
+  nextSessionId += 1
+  activeSession = session
+
+  return session
+}
+
+async function loadSearchPrices(
+  token: string,
+  session: SearchSession,
+): Promise<SearchPrice[]> {
   let attempt = 0
 
   for (;;) {
+    ensureCurrentSession(session)
+
     try {
       const result = await getSearchPrices(token)
 
+      ensureCurrentSession(session)
+
       return normalizePrices(result.prices)
     } catch (error) {
+      ensureCurrentSession(session)
+
       if (isNotReadyError(error) && error.waitUntil) {
-        await waitFor(error.waitUntil)
+        await waitFor(error.waitUntil, session)
         continue
       }
 
@@ -121,14 +196,31 @@ async function loadSearchPrices(token: string): Promise<SearchPrice[]> {
 }
 
 export async function runSearch(countryId: string): Promise<SearchResult> {
-  const { token, waitUntil } = await startSearch(countryId)
+  const session = await createSearchSession()
 
-  await waitFor(waitUntil)
+  try {
+    const { token, waitUntil } = await startSearch(countryId)
 
-  const prices = await loadSearchPrices(token)
+    if (!isCurrentSession(session)) {
+      await stopSearchPrices(token)
+      throw new SearchCancelledError()
+    }
 
-  return {
-    token,
-    prices,
+    session.token = token
+
+    await waitFor(waitUntil, session)
+    ensureCurrentSession(session)
+
+    const prices = await loadSearchPrices(token, session)
+    ensureCurrentSession(session)
+
+    return {
+      token,
+      prices,
+    }
+  } finally {
+    if (activeSession === session) {
+      activeSession = null
+    }
   }
 }

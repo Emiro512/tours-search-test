@@ -21,3 +21,16 @@ export class SearchServiceError extends Error {
     this.code = code
   }
 }
+
+export class SearchCancelledError extends Error {
+  constructor() {
+    super("Search was cancelled.")
+    this.name = "SearchCancelledError"
+  }
+}
+
+export function isSearchCancelledError(
+  error: unknown,
+): error is SearchCancelledError {
+  return error instanceof SearchCancelledError
+}

@@ -1,26 +1,37 @@
 import { useState } from "react"
 import { uiText } from "@/shared/config/ui-text"
 import { ThemeToggle } from "@/shared/ui/theme-toggle/ThemeToggle"
+import { isSearchCancelledError } from "@/services/search/search.types"
 import { TourResults } from "@/widgets/tour-results/TourResults"
 import { TourResultsSkeleton } from "@/widgets/tour-results/TourResultsSkeleton"
 import { SearchForm } from "@/widgets/search-form/SearchForm"
 import type { DestinationComboboxItem } from "@/widgets/search-form/model"
-import { useToursSearch } from "@/widgets/search-form/useToursSearch"
+import {
+  useToursSearch,
+  type ToursSearchRequest,
+} from "@/widgets/search-form/useToursSearch"
 
 export function HomePage() {
-  const [submittedCountryId, setSubmittedCountryId] = useState<string | null>(null)
-  const toursQuery = useToursSearch(submittedCountryId)
+  const [searchRequest, setSearchRequest] = useState<ToursSearchRequest | null>(null)
+  const toursQuery = useToursSearch(searchRequest)
   const errorMessage =
     toursQuery.error instanceof Error
       ? toursQuery.error.message
       : uiText.loadingToursError
+  const shouldShowError =
+    toursQuery.isError && !isSearchCancelledError(toursQuery.error)
 
   function handleSearchSubmit(selection: DestinationComboboxItem | null) {
     if (!selection?.countryId) {
       return
     }
 
-    setSubmittedCountryId(selection.countryId)
+    const countryId = selection.countryId
+
+    setSearchRequest((current) => ({
+      countryId,
+      requestId: (current?.requestId ?? 0) + 1,
+    }))
   }
 
   return (
@@ -45,16 +56,16 @@ export function HomePage() {
         <div className="px-8 py-8">
           <div className="mx-auto w-full max-w-[700px]">
             <SearchForm
-              isSubmitting={Boolean(submittedCountryId && toursQuery.isPending)}
+              isSubmitting={Boolean(searchRequest && toursQuery.isPending)}
               onSubmit={handleSearchSubmit}
             />
-            {submittedCountryId ? (
+            {searchRequest ? (
               <div className="mt-8">
                 {toursQuery.isPending ? (
                   <TourResultsSkeleton />
                 ) : null}
 
-                {toursQuery.isError ? (
+                {shouldShowError ? (
                   <p className="text-sm text-red-600 dark:text-red-400">{errorMessage}</p>
                 ) : null}
 

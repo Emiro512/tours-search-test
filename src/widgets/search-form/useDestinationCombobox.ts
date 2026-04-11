@@ -7,6 +7,8 @@ import {
 } from "@/widgets/search-form/api"
 import type { DestinationComboboxItem } from "@/widgets/search-form/model"
 
+const GEO_SEARCH_DEBOUNCE_MS = 500
+
 export function useDestinationCombobox() {
   const [value, setValue] = useState("")
   const [selectedItem, setSelectedItem] =
@@ -18,7 +20,7 @@ export function useDestinationCombobox() {
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       setDebouncedValue(value)
-    }, 300)
+    }, GEO_SEARCH_DEBOUNCE_MS)
 
     return () => {
       window.clearTimeout(timeoutId)
