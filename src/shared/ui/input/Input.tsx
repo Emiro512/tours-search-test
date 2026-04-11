@@ -22,7 +22,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         {...props}
       />
       {endAdornment ? (
-        <div className="absolute inset-y-0 right-3 flex items-center">
+        <div
+          className="absolute inset-y-0 right-3 flex items-center"
+          onMouseDown={(event) => event.preventDefault()}
+        >
           {endAdornment}
         </div>
       ) : null}
